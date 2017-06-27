@@ -1,0 +1,25 @@
+{
+  "name": "glowbear",
+  "version": "1.0.0",
+  "description": "Add custom buttons to your MacBook Pro's Touch Bar",
+  "main": "outdir/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "glow": "tsc && node_modules/.bin/electron dist/index.js"
+  },
+  "keywords": [
+    "macos",
+    "touchbar",
+    "electron"
+  ],
+  "author": "technosophos",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "1.6.11"
+  },
+  "dependencies": {
+    "applescript": "^1.0.0",
+    "yamljs": "^0.3.0"
+  }
+}

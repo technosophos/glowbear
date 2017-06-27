@@ -1,0 +1,8 @@
+commands:
+  - name: "vim"
+    color: navy
+    applescript: |-
+      tell application "MacVim"
+        activate
+        set visible of first window to true
+      end tell'
