@@ -1,4 +1,4 @@
-import {app, BrowserWindow, globalShortcut, TouchBar, dialog} from "electron"
+import {app, BrowserWindow, globalShortcut, TouchBar, dialog, Menu, MenuItem} from "electron"
 import * as register from "./commands"
 import * as fs from "fs"
 import * as process from "process"
@@ -11,6 +11,8 @@ const home = process.env.HOME
 const GLOWBEAR_ACCELERATOR = "CommandOrControl+Shift+."
 const GLOWBEAR_CONFIGDIR = `${home}/.config/glowbear`
 const GLOWBEAR_YAML = "glowbear.yaml"
+
+app.setName("Glowbear")
 
 //app.dock.setIcon(path.join(__dirname, "..", "witchlines-bear-toy-silhouette-300px.png"))
 //app.dock.setIcon(path.join(__dirname, "..", "bears2-300px.png"))
@@ -49,28 +51,43 @@ app.once("ready", () => {
 
     let configFile = path.join(GLOWBEAR_CONFIGDIR, GLOWBEAR_YAML)
     let cmds = register.commands(configFile)
+    let menu = Menu.buildFromTemplate(mainMenu)
+    let goMenu = new Menu()
     let items = [new TouchBar.TouchBarSpacer({size: "small"}), new TouchBar.TouchBarLabel({label: "glowbear"})]
-    cmds.forEach((cmd) => {
+    cmds.forEach((cmd, i) => {
+        let fn = () => {
+            window.blur()
+            // Need to app.hide instead of win.hide because the former causes the next application to be
+            // focused. This is necessary for mapping commands that attach to the topmost window.
+            app.hide()
+            try {
+                cmd.run()
+            } catch (e) {
+                dialog.showErrorBox("Script Error", "Error running script:\n"+e.message)
+            }
+        }
         items.push(new TouchBar.TouchBarButton({
             label: cmd.name,
             backgroundColor: cmd.color,
             iconPosition: "left",
-            click: () => {
-                window.blur()
-                // Need to app.hide instead of win.hide because the former causes the next application to be
-                // focused. This is necessary for mapping commands that attach to the topmost window.
-                app.hide()
-                try {
-                    cmd.run()
-                } catch (e) {
-                    dialog.showErrorBox("Script Error", "Error running script:\n"+e.message)
-                }
-            }
+            click: fn
         }))
+        // Add a menu item and accelerator per registered button.
+        let mi = new MenuItem({
+            label: cmd.name,
+            accelerator: String(i + 1),
+            click: fn
+        })
+        goMenu.append(mi)
     })
     items.push(new TouchBar.TouchBarSpacer({size: "small"}))
     let tb = createTouchBar(items)
     window.setTouchBar(tb)
+    menu.append(new MenuItem({
+        label: "Go",
+        submenu: goMenu
+    }))
+    Menu.setApplicationMenu(menu)
 })
 
 app.on("will-quit", () => {
@@ -96,3 +113,20 @@ function ensureConfigDir() {
     })
     
 }
+
+let mainMenu: Electron.MenuItemConstructorOptions[] = [
+    {
+        label: app.getName(),
+        submenu: [
+            {role: 'about'},
+            {type: 'separator'},
+            {role: 'services', submenu: []},
+            {type: 'separator'},
+            {role: 'hide'},
+            {role: 'hideothers'},
+            {role: 'unhide'},
+            {type: 'separator'},
+            {role: 'quit'}
+        ]
+    }
+]

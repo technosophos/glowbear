@@ -12,8 +12,8 @@ export function commands(configFile: string): Command[] {
     // Load the main YAML file.
     let cfg = YAML.load(configFile)
         console.log(JSON.stringify(cfg))
-        cfg.commands.forEach((o) => {
-            console.log("Adding command " + o.name)
+        cfg.commands.forEach((o, i) => {
+            console.log(`Adding command ${o.name}`)
             // This assumes the script has been inlined.
             // TODO: We need a way for the config file to point to other applescripts in 'dir'
             // or elsewhere on the filesyste.
@@ -41,10 +41,11 @@ export class Command {
         let curScreen = currentDisplay()
         console.log(curScreen)
         let script = curScreen + "\n" + this.script
-        applescript.execString(script, (err) => {
+        applescript.execString(script, (err, ret) => {
             if (err) {
                 throw err
             }
+            console.log(ret)
         })
     }
 }
