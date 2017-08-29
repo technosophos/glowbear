@@ -4,7 +4,7 @@ This is a tool for creating custom buttons to go on your MacBook Pro's touch bar
 (that glowy bar that hijacked the F-key row). It also supplies hotkey support
 so that you can map both a Touch Bar button and a hotkey.
 
-![lemmling-Gummy-bear-sort-of-300px.png]
+![Glow Bear](lemmling-Gummy-bear-sort-of-300px.png)
 
 ## Prerequisites
 
