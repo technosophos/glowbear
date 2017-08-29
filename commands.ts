@@ -20,6 +20,12 @@ export function commands(configFile: string): Command[] {
             let s = o.applescript
             let cmd = new Command(o.name, s)
             cmd.color = o.color
+            if(o.accelerator) {
+                cmd.accelerator = o.accelerator
+            }
+            if(o.showButton === false) {
+                cmd.showButton = o.showButton
+            }
             cmds.push(cmd)
         })
     
@@ -31,10 +37,14 @@ export class Command {
     name: string
     script: string
     color?: string
+    accelerator?: string
+    showButton?: boolean
 
     constructor(name: string, script: string) {
         this.name = name
         this.script = script
+        // For legacy, default to true.
+        this.showButton = true
     }
 
     public run() {

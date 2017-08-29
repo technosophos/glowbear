@@ -1,0 +1,109 @@
+# This is my own personal script that maps multiple buttons.
+commands:
+- name: "⬅️"
+  color: "#222"
+  accelerator: "w"
+  showButton: true
+  applescript: |-
+    -- Screen info is injected by GlowBear from Electron's screens. This accomodates
+    -- the fact that AppleScript can't get this info normally.
+    set {screenLeft, screenTop, screenWidth, screenHeight} to bounds of currentScreen
+    set screenRight to screenWidth/2 + screenLeft
+    set screenBottom to screenHeight + screenTop
+
+    -- find last app with focus
+    tell application "System Events"
+      set activeApp to name of first application process whose frontmost is true
+    end tell
+
+    -- set it to be on the left half of the screen
+    tell application activeApp
+      activate
+      --set visible of first window whose visible is true to true
+      if resizable of first window
+        set bounds of first window whose visible is true to {screenLeft, screenTop, screenRight, screenBottom}
+      end if
+    end tell
+- name: "↔️"
+  color: "#222"
+  showButton: true
+  accelerator: "r"
+  applescript: |-
+    set {screenLeft, screenTop, screenWidth, screenHeight} to bounds of currentScreen
+    set screenRight to screenWidth + screenLeft
+    set screenBottom to screenHeight + screenTop
+
+    -- find last app with focus
+    tell application "System Events"
+      set activeApp to name of first application process whose frontmost is true
+    end tell
+
+    -- set it to be on the left half of the screen
+    tell application activeApp
+      activate
+      --set visible of first window whose visible is true to true
+      if resizable of first window
+         -- display dialog {screenLeft, screenTop, screenWidth, screenHeight}
+         set bounds of first window whose visible is true to {screenLeft, screenTop, screenRight, screenBottom}
+         bounds of first window whose visible is true
+      end if
+    end tell
+- name: "➡️"
+  color: "#222"
+  accelerator: "e"
+  showButton: true
+  applescript: |-
+    set {screenLeft, screenTop, screenWidth, screenHeight} to bounds of currentScreen
+    set screenRight to screenWidth + screenLeft
+    set screenBottom to screenHeight + screenTop
+    set offsetLeft to screenWidth/2
+
+    -- find last app with focus
+    tell application "System Events"
+      set activeApp to name of first application process whose frontmost is true
+    end tell
+
+    -- set it to be on the left half of the screen
+    tell application activeApp
+      activate
+      if resizable of first window
+        set bounds of first window whose visible is true to {screenLeft + offsetLeft, screenTop, screenRight, screenBottom}
+        bounds of first window whose visible is true
+      end if
+    end tell
+- name: "Web"
+  color: "#b00707"
+  accelerator: "a"
+  applescript: |-
+    tell application "Vivaldi"
+      activate
+      set visible of first window whose visible is true to true
+    end tell
+- name: "vim"
+  color: "#099915"
+  applescript: |-
+    tell application "MacVim"
+      activate
+      set visible of first window whose visible is true to true
+    end tell
+- name: "Dash"
+  color: "#7851A9"
+  # For Dash, the first window is the about window.
+  applescript: |-
+    tell application "Dash"
+      activate
+      set visible of first window whose visible is true to true
+    end tell
+- name: "Slack"
+  color: "#ff004c"
+  applescript: |-
+    tell application "Slack"
+      activate
+      set visible of first window whose visible is true to true
+    end tell
+
+# Raise last app:
+# tell application "System Events"
+#    set activeApp to name of first application process whose frontmost is true
+#end tell
+#activate application activeApp

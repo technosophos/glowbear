@@ -38,7 +38,7 @@ app.once("ready", () => {
         window.hide()
     })
 
-        // Global shortcut should toggle visibility of Glowy.
+    // Global shortcut should toggle visibility of Glowy.
     globalShortcut.register(GLOWBEAR_ACCELERATOR, () => {
         if (window.isFocused()) {
             window.blur()
@@ -55,6 +55,7 @@ app.once("ready", () => {
     let goMenu = new Menu()
     let items = [new TouchBar.TouchBarSpacer({size: "small"}), new TouchBar.TouchBarLabel({label: "glowbear"})]
     cmds.forEach((cmd, i) => {
+        // We do two things here: Add a TouchBar button and add a menu item with keyboard shortcut.
         let fn = () => {
             window.blur()
             // Need to app.hide instead of win.hide because the former causes the next application to be
@@ -66,23 +67,35 @@ app.once("ready", () => {
                 dialog.showErrorBox("Script Error", "Error running script:\n"+e.message)
             }
         }
-        items.push(new TouchBar.TouchBarButton({
-            label: cmd.name,
-            backgroundColor: cmd.color,
-            iconPosition: "left",
-            click: fn
-        }))
+        if (cmd.showButton) {
+            items.push(new TouchBar.TouchBarButton({
+                label: cmd.name,
+                backgroundColor: cmd.color,
+                iconPosition: "left",
+                click: fn
+            }))
+        }
         // Add a menu item and accelerator per registered button.
+        let hotkey = String(i+1)
+        if (cmd.accelerator) {
+            hotkey = cmd.accelerator
+        }
         let mi = new MenuItem({
             label: cmd.name,
-            accelerator: String(i + 1),
+            accelerator: hotkey,
             click: fn
         })
         goMenu.append(mi)
     })
-    items.push(new TouchBar.TouchBarSpacer({size: "small"}))
+    items.push(new TouchBar.TouchBarSpacer({size: "flexible"}))
     let tb = createTouchBar(items)
     window.setTouchBar(tb)
+
+    goMenu.append(new MenuItem({
+        label: "Hide",
+        accelerator: "esc",
+        click: () => { window.blur(); app.hide() }
+    }))
     menu.append(new MenuItem({
         label: "Go",
         submenu: goMenu
