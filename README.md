@@ -13,9 +13,9 @@ so that you can map both a Touch Bar button and a hotkey.
 
 ## Usage
 
-Edit your `~/.config/glowbear/glowbear.yaml` file to contain the buttons and commands you want to run.
-
 Build it the first time with `npm install && npm build` or `yarn install && yarn build`
+
+Create/edit your `~/.config/glowbear/glowbear.yaml` file to contain the buttons and commands you want to run.
 
 Run with `npm start` or `yarn start`.
 
@@ -46,6 +46,8 @@ Commands have the following properties:
 - `accelerator`: A hotkey (optional).
 - `applescript`: The script to execute when the button is clicked or the
   acclerator is executed.
+
+Check out the [examples](examples/glowbear.yaml) directory for more examples.
 
 ## LICENSE
 
